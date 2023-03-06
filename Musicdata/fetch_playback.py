@@ -25,4 +25,4 @@ print(f"Album: {album_name}")
 print(f"Position: {position_sec} seconds")
 
 #print(spotipy.client.Spotify.add_to_queue(uri='64v1g2HcPumBz2Wd1rT56b',device_id=None))
-a=spotipy.client.Spotify().queue()
+#a=spotipy.client.Spotify().queue()
