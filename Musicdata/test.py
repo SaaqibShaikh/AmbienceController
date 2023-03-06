@@ -1,27 +1,21 @@
+# shows audio analysis for the given track
+print("ui")
+#from __future__ import print_function    # (at top of module)
+from spotipy.oauth2 import SpotifyClientCredentials
+import json
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
+import time
+import sys
+client_credentials_manager = SpotifyClientCredentials()
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-# Set up authentication credentials
-scope = "user-library-read user-read-playback-state"
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
-
-# Get information about the currently playing track
-current_track = sp.current_playback()
-
-# Check if the current track is part of a playlist
-if current_track['context'] is not None and 'uri' in current_track['context']:
-    # Get the URI of the queue playlist
-    playlist_uri = current_track['context']['uri']
-    a=playlist_uri.rsplit(":")
-    # Get information about the tracks in the queue playlist
-    playlist_items = sp.playlist_items(playlist_id=a[4], fields='items(track(name, artists(name)))')
-
-    # Print the details of each track in the queue
-    for item in playlist_items['items']:
-        track = item['track']
-        print(f"Track: {track['name']}")
-        print(f"Artist: {track['artists'][0]['name']}")
-        print()
-
+if len(sys.argv) > 1:
+    tid = sys.argv[1]
 else:
-    print("There is no queue playlist currently playing.")
+    tid = 'spotify:track:2mj1Z5bqu0UfW4o4a7UxpW'
+
+start = time.time()
+analysis = sp.audio_analysis(tid)
+delta = time.time() - start
+print(json.dumps(analysis, indent=4))
+print("analysis retrieved in %.2f seconds" % (delta,))
