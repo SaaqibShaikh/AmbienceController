@@ -7,8 +7,8 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
 # Get information about the currently playing track
 current_track = sp.current_playback()
-print(type(current_track))
-print(list(current_track))
+#print(type(current_track))
+#print(list(current_track))
 # Get the name of the track, artist, and album
 track_name = current_track['item']['name']
 artist_name = current_track['item']['artists'][0]['name']
