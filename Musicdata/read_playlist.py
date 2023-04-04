@@ -12,7 +12,8 @@ current_track = sp.current_playback()
 if current_track['context'] is not None and 'uri' in current_track['context']:
     # Get the URI of the queue playlist
     playlist_uri = current_track['context']['uri']
-    a=playlist_uri.rsplit(":")
+    #print(playlist_uri)
+    a=playlist_uri.rsplit(":") #extracting the string uri without the definitive token names
     # Get information about the tracks in the queue playlist
     playlist_items = sp.playlist_items(playlist_id=a[4], fields='items(track(name, artists(name)))')
 
