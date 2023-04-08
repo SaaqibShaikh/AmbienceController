@@ -109,7 +109,7 @@ def extractBPM():
     samps, fs = read_wav("output1.wav")
     data = []
     correl = []
-    bpm = 0
+    global bpm
     n = 0
     nsamps = len(samps)
     window_samps = int(3 * fs)
@@ -144,5 +144,5 @@ def extractBPM():
     n = range(0, len(correl))
     plt.plot(n, abs(correl))
     plt.show(block=True)
+    print("#metoo")
     return bpm
-#extractBPM()

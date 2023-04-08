@@ -28,7 +28,8 @@ def fetch_features(track):
     start = time.time()
     features = sp.audio_features(track)
     delta = time.time() - start
-    # print(json.dumps(features, indent=4))
-    print("analysis retrieved in %.2f seconds" % (delta,))
-    # print(features)
+    #print(json.dumps(features, indent=4))
+    #print("analysis retrieved in %.2f seconds" % (delta,))
+    print(features)
     return features
+fetch_features('2mj1Z5bqu0UfW4o4a7UxpW')

@@ -6,10 +6,10 @@ CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
-RECORD_SECONDS = 10
+RECORD_SECONDS = 25
 WAVE_OUTPUT_FILENAME = "output1.wav"
 
-if sys.platform == 'darwin':#Setting channels for mac,It has different controls
+if sys.platform == 'darwin': #Setting channels for mac,It has different controls
     CHANNELS = 1
 def record():
     p = pyaudio.PyAudio()
@@ -40,3 +40,4 @@ def record():
     wf.setframerate(RATE)
     wf.writeframes(b''.join(frames))
     wf.close()
+    print("done.gg")
