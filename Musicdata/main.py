@@ -5,6 +5,10 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import fetch_playback as f
 import track_analysis as t
+import serial
+import time
+
+ser = serial.Serial('COM3', 9600)
 def get_currentposition():
     time = int(result['progress_ms'] / 1000)
     return time
@@ -20,13 +24,13 @@ try:
         scope = 'user-read-playback-state'
         sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id='', client_secret='', scope=scope, redirect_uri=''))
         result = sp.current_playback()
-        print(result)
+        # print(result)
         track_uri = result['item']['external_urls']['spotify']
         track_name = result['item']['name']
         track_sus = result['item']
         track_properties = sp.track(track_uri)
-        print("Printing Track properties",track_properties)
-        print("Track popularity on a scale of 0 to 1: ",track_properties['popularity'])
+        #print("Printing Track properties",track_properties)
+        #print("Track popularity on a scale of 0 to 1: ",track_properties['popularity'])
         # print(track_sus)
 
 
@@ -36,7 +40,7 @@ try:
         # print(test_1)
 
         # print("artist genres:", test_1["genres"])
-        print("Track name is: ",track_name)
+        #print("Track name is: ",track_name)
         currenttrack_features = t.fetch_features(track_uri)
         currenttrack_tempo = currenttrack_features[0]['tempo']
         currenttrack_valence = currenttrack_features[0]['valence']
@@ -45,34 +49,41 @@ try:
         cur_pos = get_currentposition()
         track_length = get_tracktime()
         relative_pos = track_length-cur_pos
-        if (relative_pos >= 3 and cur_pos >= 2):
-            if (currenttrack_tempo>=140):
-                print("red")
-            elif (currenttrack_valence>=0.5):
-                print("Yellow")
-            #     if(currenttrack_acousticness>=0.6):
-            #         print("Positive Acoustic")
-            #         continue
-            #     if(currenttrack_speechiness>=0.6):
-            #         print("Not acoustic but speechy, basically COUNTRY")
-            #         continue
-            #     if(currenttrack_tempo<80):
-            #         print("something")
-            #     elif(currenttrack_tempo>=80 and currenttrack_tempo<= 100):
-            #         print("something 2.0")
-            #     elif(currenttrack_tempo>=100 and currenttrack_tempo<= 130):
-            #         print("something 3.0")
-            #     elif(currenttrack_tempo>=130 and currenttrack_tempo<= 160):
-            #         print("something 4.0")
-            #     elif(currenttrack_tempo>=160 and currenttrack_tempo<=220):
-            #         print("something 3.0")
-            #     elif(currenttrack_tempo>=220):
-            #         print("Flickering red killer rock music")
+        if(result['is_playing'] is True):
+            if (relative_pos >= 4 and cur_pos > 2):
+                if (currenttrack_tempo>=140):
+                    ser.write(b'R')
+                    # print("red")
+                elif (currenttrack_valence>=0.5):
+                    ser.write(b'Y')
+                    # print("red")
+                #     if(currenttrack_acousticness>=0.6):
+                #         print("Positive Acoustic")
+                #         continue
+                #     if(currenttrack_speechiness>=0.6):
+                #         print("Not acoustic but speechy, basically COUNTRY")
+                #         continue
+                #     if(currenttrack_tempo<80):
+                #         print("something")
+                #     elif(currenttrack_tempo>=80 and currenttrack_tempo<= 100):
+                #         print("something 2.0")
+                #     elif(currenttrack_tempo>=100 and currenttrack_tempo<= 130):
+                #         print("something 3.0")
+                #     elif(currenttrack_tempo>=130 and currenttrack_tempo<= 160):
+                #         print("something 4.0")
+                #     elif(currenttrack_tempo>=160 and currenttrack_tempo<=220):
+                #         print("something 3.0")
+                #     elif(currenttrack_tempo>=220):
+                #         print("Flickering red killer rock music")
+                else:
+                    ser.write(b'G')
+                    # print("green")
             else:
-                print("green")
+                ser.write(b'W')
+                # print("transition")
         else:
-            print("default white light maybe or red")
-        time.sleep(3)
+            ser.write(b'P')
+
 except TimeoutError:
     print()
     print()
